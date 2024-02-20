@@ -1,39 +1,61 @@
 #!/usr/bin/python3
 
-# python3 -c 'print(__import__("sys").__doc__)'
-
+import os
 import sys
 import markdown
 
-def convert_markdown_to_html(markdown_file, output_file):
-    try:
-        # Read the content of the Markdown file
-        with open(markdown_file, 'r') as f:
-            markdown_content = f.read()
-        
-        # Convert Markdown to HTML
-        html_content = markdown.markdown(markdown_content)
+"""
+Converts a Markdown file to HTML.
 
-        # Write the HTML content to the output file
-        with open(output_file, 'w') as f:
-            f.write(html_content)
+Usage: ./markdown2html.py <input_file.md> <output_file.html>
 
-        print("HTML file generated successfully.")
-        return 0
+Example: ./markdown2html.py README.md readme.html
+"""
 
-    except FileNotFoundError:
-        print(f"Missing {markdown_file}", file=sys.stderr)
-        return 1
+def main():
+    """
+    Parses arguments, performs Markdown conversion, and handles errors.
+    """
 
-if __name__ == "__main__":
-    # Check if the correct number of arguments is provided
-    if len(sys.argv) != 3:
-        print("Usage: ./markdown2html.py <Markdown file> <Output file>", file=sys.stderr)
+    # Ensure correct number of arguments
+    if len(sys.argv) < 3:
+        print("Usage: ./markdown2html.py <input_file.md> <output_file.html>", file=sys.stderr)
         sys.exit(1)
 
-    markdown_file = sys.argv[1]
+    # Extract input and output filenames
+    input_file = sys.argv[1]
     output_file = sys.argv[2]
 
+    # Check if input file exists
+    if not os.path.exists(input_file):
+        print(f"Missing {input_file}", file=sys.stderr)
+        sys.exit(1)
+
+    # Read Markdown content
+    try:
+        with open(input_file, 'r') as file:
+            markdown_content = file.read()
+    except IOError as e:
+        print(f"Error reading file: {e}", file=sys.stderr)
+        sys.exit(1)
+
     # Convert Markdown to HTML
-    exit_code = convert_markdown_to_html(markdown_file, output_file)
-    sys.exit(exit_code)
+    try:
+        html_content = markdown.markdown(markdown_content)
+    except Exception as e:
+        print(f"Error converting Markdown: {e}", file=sys.stderr)
+        sys.exit(1)
+
+    # Write HTML content to output file
+    try:
+        with open(output_file, 'w') as file:
+            file.write(html_content)
+    except IOError as e:
+        print(f"Error writing to file: {e}", file=sys.stderr)
+        sys.exit(1)
+
+    # Success
+    print(f"Converted {input_file} to {output_file}")
+
+if __name__ == "__main__":
+    main()
