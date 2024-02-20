@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+# python3 -c 'print(__import__("sys").__doc__)'
+
 import sys
 import markdown
 
