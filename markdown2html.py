@@ -26,9 +26,3 @@ def main():
 
     convert_markdown_to_html(md_file, html_file)
     
-if __name__ != "__main__":
-    # This block will execute if the script is imported as a module.
-    pass
-else:
-    # This block will execute if the script is run directly.
-    main()
