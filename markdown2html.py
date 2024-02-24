@@ -1,21 +1,34 @@
 #!/usr/bin/python3
+
 import sys
 import os
+import markdown
 
-if __name__ == "__main__":
-    # Check if the correct number of arguments is provided
-    if len(sys.argv) < 3:
-        print("Usage: ./markdown2html.py <markdown_file> <output_file>", file=sys.stderr)
+def convert_markdown_to_html(md_file, html_file):
+    if not os.path.exists(md_file):
+        print(f"Missing {md_file}", file=sys.stderr)
         sys.exit(1)
 
-    # Extract the command-line arguments
-    markdown_file = sys.argv[1]
-    output_file = sys.argv[2]
+    with open(md_file, 'r') as f:
+        markdown_text = f.read()
 
-    # Check if the Markdown file exists
-    if not os.path.isfile(markdown_file):
-        print(f"Missing {markdown_file}", file=sys.stderr)
+    html_text = markdown.markdown(markdown_text)
+
+    with open(html_file, 'w') as f:
+        f.write(html_text)
+
+def main():
+    if len(sys.argv) <3:
+        print("Usage: ./markdown2html.py README.md README.html", file=sys.stderr)
         sys.exit(1)
+    md_file = sys.argv[1]
+    html_file = sys.argv[2]
 
-    # If all conditions are met, print nothing and exit with status 0
-    sys.exit(0)
+    convert_markdown_to_html(md_file, html_file)
+    
+if __name__ != "__main__":
+    # This block will execute if the script is imported as a module.
+    pass
+else:
+    # This block will execute if the script is run directly.
+    main()
