@@ -3,7 +3,9 @@ import sys
 import os
 import markdown
 
+
 def convert_markdown_to_html(md_file, html_file):
+    
     if not os.path.exists(md_file):
         print(f"Missing {md_file}", file=sys.stderr)
         sys.exit(1)
@@ -15,6 +17,7 @@ def convert_markdown_to_html(md_file, html_file):
 
     with open(html_file, 'w') as f:
         f.write(html_text)
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
