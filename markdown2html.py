@@ -1,12 +1,12 @@
 #!/usr/bin/python3
-
-import os
-import sys
-from markdown import markdown
 """ Write a script markdown2html.py that takes an argument 2 strings:
 
 First argument is the name of the Markdown file
 Second argument is the output file name """
+
+import os
+import sys
+from markdown import markdown
 
 def markdown2html(markdown_file, html_file):
     """Converts a Markdown file to HTML using the markdown library.
