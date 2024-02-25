@@ -5,12 +5,12 @@ import markdown
 from os import path
 
 
-def convert_markdown_to_html(markdown_file, html_file):
+def convert_markdown_to_html(markdown_file, html_output_file):
     '''convert Markdown to HTML'''
     with open(markdown_file, 'r') as md_file:
         content = md_file.read()
     html = markdown.markdown(content)
-    with open(html_file, 'w') as html_file:
+    with open(html_output_file, 'w') as html_file:
         html_file.write(html)
 
 
