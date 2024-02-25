@@ -9,17 +9,7 @@ import sys
 from markdown import markdown
 
 def markdown2html(markdown_file, html_file):
-    """Converts a Markdown file to HTML using the markdown library.
-
-    Args:
-        markdown_file (str): The path to the Markdown file.
-        html_file (str): The path to the output HTML file.
-
-    Raises:
-        ValueError: If the number of arguments is incorrect.
-        FileNotFoundError: If the specified Markdown file doesn't exist.
-    """
-
+   
     if len(sys.argv) != 3:
         raise ValueError("Usage: ./markdown2html.py README.md README.html")
 
