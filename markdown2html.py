@@ -1,8 +1,4 @@
 #!/usr/bin/python3
-
-import os
-import sys
-
 """
 Converts a Markdown file to HTML.
 
@@ -12,6 +8,11 @@ Args:
     markdown_file: Path to the Markdown file.
     output_html: Path to the output HTML file.
 """
+
+
+import os
+import sys
+
 
 def main():
     """
