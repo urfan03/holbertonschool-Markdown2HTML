@@ -1,8 +1,4 @@
 #!/usr/bin/python3
-'''This script takes two arguments: first is a markdown file name and the
-    second is an html output filename
-'''
-
 
 import sys
 import os
