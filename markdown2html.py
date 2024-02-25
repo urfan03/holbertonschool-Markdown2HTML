@@ -1,20 +1,21 @@
 #!/usr/bin/python3
-'''This script takes two arguments: first is a markdown file name and the
-    second is an html output filename
-'''
 
-
-import sys
 import os
+import sys
 
+"""
+Converts a Markdown file to HTML.
+
+Usage: ./markdown2html.py <markdown_file> <output_html>
+
+Args:
+    markdown_file: Path to the Markdown file.
+    output_html: Path to the output HTML file.
+"""
 
 def main():
     """
-    Converts a Markdown file to HTML.
-
-    Args:
-        sys.argv[1]: Path to the Markdown file.
-        sys.argv[2]: Path to the output HTML file.
+    Main function for converting Markdown to HTML.
     """
 
     if len(sys.argv) < 3:
@@ -22,6 +23,8 @@ def main():
         sys.exit(1)
 
     markdown_file = sys.argv[1]
+    output_html = sys.argv[2]
+
     if not os.path.isfile(markdown_file):
         print(f"Missing file: {markdown_file}", file=sys.stderr)
         sys.exit(1)
@@ -31,7 +34,7 @@ def main():
 
     html_content = convert_markdown_to_html(markdown_content)
 
-    with open(sys.argv[2], "w") as f:
+    with open(output_html, "w") as f:
         f.write(html_content)
 
     sys.exit(0)
