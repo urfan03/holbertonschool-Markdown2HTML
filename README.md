@@ -1,14 +1,4 @@
-title
-hello Holberton
-Holberton School
-Webstack
-sub title
-super
-cool
-new
-one
-paragraph paragraph2
-
-paragraph3
-
-Hello Hello
+Markdown to HTML
+Description
+Markdown is awesome! All your README.md are made in Markdown, but do you know how Github are rendering them?
+It’s time to code a Markdown to HTML!
