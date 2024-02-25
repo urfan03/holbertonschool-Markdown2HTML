@@ -21,7 +21,7 @@ def markdown2html(markdown_file, html_file):
     """
 
     if len(sys.argv) != 3:
-        raise ValueError("Usage: ./markdown2html.py <markdown_file> <html_file>")
+        raise ValueError("Usage: ./markdown2html.py README.md README.html")
 
     if not os.path.exists(markdown_file):
         raise FileNotFoundError(f"Missing file: {markdown_file}")
