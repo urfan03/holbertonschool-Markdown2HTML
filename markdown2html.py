@@ -5,35 +5,54 @@
 
 
 import sys
+import os
+
 
 def main():
-  # Check if enough arguments are provided
-  if len(sys.argv) < 3:
-    print("Usage: ./markdown2html.py <markdown_file> <output_html>", file=sys.stderr)
-    sys.exit(1)
+    """
+    Converts a Markdown file to HTML.
 
-  # Check if the Markdown file exists
-  if not os.path.isfile(sys.argv[1]):
-    print(f"Missing file: {sys.argv[1]}", file=sys.stderr)
-    sys.exit(1)
+    Args:
+        sys.argv[1]: Path to the Markdown file.
+        sys.argv[2]: Path to the output HTML file.
+    """
 
-  # Read the Markdown file content
-  with open(sys.argv[1], "r") as markdown_file:
-    markdown_content = markdown_file.read()
+    if len(sys.argv) < 3:
+        print("Usage: ./markdown2html.py <markdown_file> <output_html>", file=sys.stderr)
+        sys.exit(1)
 
-  # Convert Markdown to HTML (replace with your preferred conversion method)
-  html_content = convert_markdown_to_html(markdown_content)
+    markdown_file = sys.argv[1]
+    if not os.path.isfile(markdown_file):
+        print(f"Missing file: {markdown_file}", file=sys.stderr)
+        sys.exit(1)
 
-  # Write HTML content to output file
-  with open(sys.argv[2], "w") as output_file:
-    output_file.write(html_content)
+    with open(markdown_file, "r") as f:
+        markdown_content = f.read()
 
-  # Exit with success
-  sys.exit(0)
+    html_content = convert_markdown_to_html(markdown_content)
 
-# Placeholder function for Markdown conversion. You need to implement this based on your chosen library
+    with open(sys.argv[2], "w") as f:
+        f.write(html_content)
+
+    sys.exit(0)
+
+
 def convert_markdown_to_html(markdown_content):
-  raise NotImplementedError("Please implement the markdown_to_html function with your chosen library")
+    """
+    Converts Markdown content to HTML.
+
+    Args:
+        markdown_content: The Markdown content as a string.
+
+    Returns:
+        The converted HTML content as a string.
+
+    Raises:
+        NotImplementedError: The implementation for this function is missing.
+    """
+
+    raise NotImplementedError("Please implement the markdown_to_html function with your chosen library")
+
 
 if __name__ == "__main__":
-  main()
+    main()
