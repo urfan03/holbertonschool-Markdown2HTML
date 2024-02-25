@@ -3,6 +3,7 @@
 
 First argument is the name of the Markdown file
 Second argument is the output file name """
+import sys
 from mistletoe import markdown
 
 def markdown_to_html(markdown_text):
