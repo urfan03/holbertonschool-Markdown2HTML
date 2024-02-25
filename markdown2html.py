@@ -1,47 +1,32 @@
 #!/usr/bin/python3
-""" Write a script markdown2html.py that takes an argument 2 strings:
+"""Convert Markdown to HTML"""
 
-First argument is the name of the Markdown file
-Second argument is the output file name """
 import sys
-from mistletoe import markdown
+import os
+import markdown
 
-def markdown_to_html(markdown_text):
-  """
-  Converts Markdown text to HTML using the mistletoe library.
+def convert_markdown_to_html(md_file, html_file):
+    """Convert Markdown file to HTML file."""
+    if not os.path.exists(md_file):
+        sys.stderr.write(f"Missing {md_file}\n")
+        sys.exit(1)
 
-  Args:
-      markdown_text: The Markdown text to be converted.
+    with open(md_file, 'r') as md:
+        markdown_text = md.read()
 
-  Returns:
-      The converted HTML string.
-  """
-  html = markdown(markdown_text)
-  return html
+    html_text = markdown.markdown(markdown_text)
 
-def main():
-  """
-  Reads Markdown from a file, converts it to HTML, and saves it to another file.
-
-  Args:
-      None.
-
-  Returns:
-      None.
-  """
-  if len(sys.argv) < 3:
-    sys.stderr.write("Usage: ./markdown2html.py README.md README.html\n")
-    sys.exit(1)
-
-  with open(sys.argv[1], "r") as markdown_file:
-    markdown_text = markdown_file.read()
-
-  html_content = markdown_to_html(markdown_text)
-
-  with open(sys.argv[2], "w") as output_file:
-    output_file.write(html_content)
-
-  sys.exit(0)
+    with open(html_file, 'w') as html:
+        html.write(html_text)
 
 if __name__ == "__main__":
-  main()
+    if len(sys.argv) != 3:
+        sys.stderr.write("Usage: ./markdown2html.py README.md README.html\n")
+        sys.exit(1)
+
+    md_file = sys.argv[1]
+    html_file = sys.argv[2]
+
+    convert_markdown_to_html(md_file, html_file)
+
+    sys.exit(0)
