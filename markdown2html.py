@@ -1,147 +1,62 @@
 #!/usr/bin/python3
-'''Script that takes an argument 2 strings:
+""" 
+Write a script markdown2html.py that takes an argument 2 strings:
 First argument is the name of the Markdown file
-Second argument is the output file name
-script converts the markdown file to HTML
-The script will convert the following markdown syntax:
-- Headers: Any number of #s at the start of a line
-- Unordered listing: Lines that start with a dash (-)
-- Ordered listing: Lines that start with a star (*)
-- Text in double asterisks (**) is bold
-- Text in double underscores (__) is italic
-- Text in double brackets (()) is hashed
-- Text in double parentheses (()) is case insensitive
-The script will convert the markdown file to HTML and write it to the output file
-If the markdown file does not exist, the script will print Missing <filename> and exit with a status code of 1
-If the output file already exists, it will be overwritten
-The script will exit with a status code of 0 upon success
+Second argument is the output file name 
+"""
 
-Usage: ./markdown2html.py README.md README.html 
-'''
-
-import sys
 import os
-import hashlib
+import sys
 import re
 
-def findLines(lines, index, type):
-    selected = []
+def parse_section(section_text):
+    headings = re.findall(r'(#+)\s*(.*)', section_text)
+    html_content = ""
+    if headings:
+        for hash_count, title in headings:
+            hash_level = len(hash_count)
+            html_content += f"<h{hash_level}>{title.strip()}</h{hash_level}>\n"
 
-    if type == "p":
-        for i in range(index, len(lines)):
-            lines[i] = bold(italic(hash(case_ins(lines[i]))))
-            if lines[i] and not lines[i].startswith("#") and not lines[i].startswith("- ") and not lines[i].startswith("* "):
-                selected.append(lines[i])
-            else:
-                break
-        return selected
-
-    if type == "ul":        
-        for i in range(index, len(lines)):
-            lines[i] = bold(italic(hash(case_ins(lines[i]))))
-            if lines[i] and lines[i].startswith("- "):
-                selected.append(lines[i])
-            else:
-                break
-        return selected
-
-    if type == "ol":        
-        for i in range(index, len(lines)):
-            lines[i] = bold(italic(hash(case_ins(lines[i]))))
-            if lines[i] and lines[i].startswith("* "):
-                selected.append(lines[i])
-            else:
-                break
-        return selected
-                    
-
-def heading(line):
-    count = 0
-    for character in line:
-        if character == "#":
-            count += 1
-        else:
-            break
-    return f"<h{count}>{line[count + 1:]}</h{count}>\n"
-
-def listing(lines, type):
-    html = f"<{type}>\n"
-    for line in lines:
-        html += f"<li>{line[2:]}</li>\n"
-    html += f"</{type}>\n"
+    lines_with_dashes = re.findall(r'(-+)\s*(.*)', section_text)
+    if lines_with_dashes:
+        html_content += "<ul>\n"
+        for _, words in lines_with_dashes:
+            html_content += f"    <li>{words.strip()}</li>\n"
+        html_content += "</ul>\n"
     
-    return html
-
-def paragraph(lines):
-    html = "<p>\n"
-    for index, line in enumerate(lines):
-        html += f"{line}\n"
-        if index == len(lines) - 1:
-            continue
-        html += "<br />\n"
-    html += f"</p>\n"
-    return html
-
-def bold(line):
-    line = line.replace("**", "<b>", 1)
-    line = line.replace("**", "</b>", 1)
-    return line
-
-def italic(line):
-    line = line.replace("__", "<em>", 1)
-    line = line.replace("__", "</em>", 1)
-    return line
-
-def hash(line):
-    match = re.search(r'\[\[(.*?)\]\]', line)
-    while match:
-        hashed = hashlib.md5(match.group(1).encode()).hexdigest()
-        line = line.replace(line[match.start():match.end()], hashed)
-        match = re.search(r'\[\[(.*?)\]\]', line)
-        
-    return line
-
-def case_ins(line):
-    match = re.search(r'\(\((.*?)\)\)', line)
-    while match:
-        text = re.sub("c", "", match.group(1), flags = re.IGNORECASE)
-        line = line.replace(line[match.start():match.end()], text)
-        match = re.search(r'\(\((.*?)\)\)', line)
-        
-    return line
+    lines_with_stars = re.findall(r'(\*+)\s*(.*)', section_text) 
+    if lines_with_stars:
+        html_content += "<ol>\n"
+        for _, words in lines_with_stars:
+            html_content += f"    <li>{words.strip()}</li>\n"
+        html_content += "</ol>\n"
+    
+    return html_content
 
 if __name__ == "__main__":
-    if len(sys.argv) < 3:
+    args = sys.argv
+    if len(args) != 3:
         sys.stderr.write("Usage: ./markdown2html.py README.md README.html\n")
         exit(1)
-    if not os.path.exists(sys.argv[1]):
-        sys.stderr.write("Missing " + sys.argv[1] + "\n")
+
+    input_file = args[1]
+    output_file = args[2]
+
+    if not os.path.exists(input_file):
+        sys.stderr.write(f"Missing {input_file}\n")
         exit(1)
 
-    with open(sys.argv[1]) as readFile:
-        with open(sys.argv[2], "w") as html_file:
-            lines = readFile.read().splitlines()
-            content = ""
+    with open(input_file, "r") as readme_file:
+        text = readme_file.read()
 
-            for index, line in enumerate(lines):
-                line = bold(italic(hash(case_ins(line))))
-                if not line:
-                    continue
-                elif line.startswith("#"):
-                    content += heading(line)
-                elif line.startswith("- "):
-                    selected = findLines(lines, index, "ul")
-                    del lines[index:index + len(selected)]
-                    content += listing(selected, "ul")
-                elif line.startswith("* "):
-                    selected = findLines(lines, index, "ol")
-                    del lines[index:index + len(selected)]
-                    content += listing(selected, "ol")
-                else:
-                    selected = findLines(lines, index, "p")
-                    del lines[index:index + len(selected)]
-                    content += paragraph(selected)
-                    
-            html_file.write(content)
-       
+    sections = re.split(r'(#{1,6}\s+.*)', text)  # Split text into sections based on headings
+
+    html_content = ""
+    for section_text in sections:
+        if section_text.strip():  # Skip empty sections
+            html_content += parse_section(section_text)
+
+    with open(output_file, 'w') as html_file:
+        html_file.write(html_content)
+
     exit(0)
